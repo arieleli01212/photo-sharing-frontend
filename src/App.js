@@ -1,24 +1,34 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useState } from 'react';
+import { Info } from './components/Info';
+import { Faces } from './components/Faces'; 
+import { Gallery } from './components/Gallery'; 
+
+
 
 function App() {
+  const [imageCount, setImageCount] = useState(0);
+  const [guestCount, setGuestCount] = useState(0);
+  const [uploadedImages, setUploadedImages] = useState([]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <div>
+      <Info
+        imageCount={imageCount}
+        guestCount={guestCount}
+        setImageCount={setImageCount}
+        setUploadedImages={setUploadedImages} 
+        fetchImages={() => {
+          // Trigger the gallery sync from here
+          document.querySelector('gallery').fetchImages();
+        }}
+      />
+      <Faces setGuestCount={setGuestCount}/>
+      <Gallery 
+        uploadedImages={uploadedImages}  // Pass uploadedImages to Gallery
+        setImageCount={setImageCount} 
+      />
+      </div>
   );
 }
 

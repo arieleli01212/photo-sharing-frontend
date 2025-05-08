@@ -1,0 +1,45 @@
+
+.horizontal-list {
+    list-style-type: none;
+    margin: 0;
+    border-bottom: 2px solid #000;
+    display: flex;
+    justify-content: flex-start; /* Align items to the start of the container */
+    padding: 20px;
+    width: 100%; /* Container width, flexible based on the screen size */
+    max-width: 100%; /* Set a fixed width to show 5 items */
+    white-space: nowrap;
+    box-sizing: border-box;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    gap: 10px; /* Space between items */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  }
+  
+  .circle {
+    width: 80px;
+    height: 80px;
+    background-color: #fff;
+    border: 2px solid #000;
+    border-radius: 50%; /* Makes it circular */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    scroll-snap-align: start; /* Ensures each item snaps to the start */
+    flex-wrap: nowrap; /* Prevent items from wrapping */
+  
+  }
+  
+  
+  /* Hide scrollbar while keeping the ability to scroll */
+  .horizontal-list::-webkit-scrollbar {
+    display: none; /* Hide scrollbar */
+  }
+  
+  .horizontal-list {
+    -ms-overflow-style: none; /* For Internet Explorer */
+    scrollbar-width: none; /* For Firefox */
+  }
+  

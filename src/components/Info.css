@@ -1,0 +1,82 @@
+
+.head-title {
+  font-size: 2rem; /* Adjust font size as needed */
+  text-align: center; /* Horizontally center the title */
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+  
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* Profile picture in one column, text content in another */
+  gap: 20px;
+  padding: 20px 20px 20px 20px;
+  border-bottom: 2px solid #000;
+  align-self: center;
+  justify-items: center; /* This will help in centering items */
+
+}
+
+.profile-picture {
+  background-color: #ffffff;
+  border: 2px solid #000;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  align-self: center;
+}
+
+.text-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+
+h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+}
+
+.stats > div {
+  text-align: center;
+}
+
+h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.share-button {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #D5A6BD;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.share-button:hover {
+  background-color: #C5A0A6;
+}

@@ -1,0 +1,56 @@
+.grid-container-images {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 items per row */
+    gap: 10px;
+    padding: 20px;
+    border-bottom: 2px solid #000;
+    align-self: center;
+    
+  }
+
+.grid-container-images-try1 {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0px;
+  padding-top: 0px;
+  position: relative;
+}
+
+.vertical-list {
+  list-style-type: none;
+  margin: 0;
+  border-bottom: 2px solid #000;
+  justify-content: flex-start; /* Align items to the start of the container */
+  padding: 20px;
+  height: 100%; /* Container width, flexible based on the screen size */
+  max-height: 500px; /* Set a fixed width to show 5 items */
+  white-space: nowrap;
+  box-sizing: border-box;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  gap: 10px; /* Space between items */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+/* Hide scrollbar while keeping the ability to scroll */
+.vertical-list::-webkit-scrollbar {
+  display: none; /* Hide scrollbar */
+}
+
+.vertical-list {
+  -ms-overflow-style: none; /* For Internet Explorer */
+  scrollbar-width: none; /* For Firefox */
+  list-style-type: none;
+  margin: 0;
+}
+
+.image-card {
+  height: 100%; /* Fixed height for the image container */
+  width: 100%; /* Make sure the container takes full width available */
+  overflow: hidden; /* Ensures the image stays inside the container without spilling out */
+  position: relative;
+  padding-top: 75%; /* Maintain 4:3 aspect ratio (adjust as needed) */
+}
+.image {
+  width: 100%; /* Ensure the images fit inside the container */
+  height: auto;
+}
