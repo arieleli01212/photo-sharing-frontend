@@ -1,7 +1,6 @@
 import './Profile'
 
 export function Profile({imageCount}) {
-    const [imageCount, setimageCount] = useState([]);
 
     return(
         <header>
