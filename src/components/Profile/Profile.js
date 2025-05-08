@@ -1,92 +1,77 @@
-import { useRef } from 'react';
-import './Profile'
+import React, { useRef } from "react";
+import "./Profile.css";
 
-export function Profile({imageCount, guestCount, setImageCount, setUploadedImages, fetchImages }) {
+export function Profile({
+  imageCount,
+  guestCount,
+  setImageCount,
+  fetchImages,        // ← straight from App
+}) {
+  const fileInput = useRef(null);
 
-    const Title = <h1 className="profile-user-name">Ariel & Yaara <br /> Wedding</h1>
+  const handleUpload = async (e) => {
+    const files = e.target.files;
+    if (!files.length) return;
 
-    const fileInputRef = useRef(null);  // Reference to the file input element
+    const fd = new FormData();
+    [...files].forEach((f) => fd.append("images", f));
 
-    // Function to handle image upload
-    const handleImageUpload = async (event) => {
-      const files = event.target.files;
-      const formData = new FormData();
-      for (let i = 0; i < files.length; i++) {
-        formData.append('images', files[i]);
-      }
+    await fetch("http://172.20.10.6:5000/upload", { method: "POST", body: fd });
 
-      // Send the files to the backend
-      const response = await fetch('http://172.20.10.6:5000/upload', {
-        method: 'POST',
-        body: formData,
-      });
+    /* optimistic local counter */
+    setImageCount((n) => n + files.length);
 
-      const result = await response.json();
-      setUploadedImages(result.filePaths);
+    /* now ask App to refresh the official list */
+    fetchImages();
+  };
 
-      // Update the image count and uploaded images state
-      setImageCount((prevCount) => prevCount + files.length);
-      
-      // Trigger a gallery sync by calling the fetchImages function
-      fetchImages(); // Call this to update the gallery with new images
-    };
-
-    // Trigger file input click when Share Your Memories button is clicked
-    const handleShareClick = () => {
-      fileInputRef.current.click();  // This will automatically open the file input dialog
-    };
-
-    
-    return(
-        <header>
-
-        <div class="container">
-  
-          <div class="profile">
-  
-            <div class="profile-image">
-  
-              <img src="https://images.unsplash.com/photo-1513721032312-6a18a42c8763?w=152&h=152&fit=crop&crop=faces" alt=""/>
-  
-            </div>
-  
-            <div class="profile-user-settings">
-  
-              {Title}
-  
-              <button class="btn profile-edit-btn" onClick={handleShareClick}>Edit Profile</button>
-              {/* File input, hidden by default */}
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleImageUpload}
-                ref={fileInputRef}  // Attach ref to the file input
-                style={{ display: 'none' }}  // Hide the file input
-              />
-              <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
-  
-            </div>
-  
-            <div class="profile-stats">
-  
-              <ul>
-                <li><span class="profile-stat-count">{imageCount}</span><br/>posts</li>
-                <li><span class="profile-stat-count">{guestCount}</span><br/>guests</li>
-              </ul>
-  
-            </div>
-  
-            <div class="profile-bio">
-  
-              <p><span class="profile-real-name">Jane Doe</span> Lorem ipsum dolor sit, amet consectetur adipisicing elit 📷✈️🏕️</p>
-  
-            </div>
-  
+  return (
+    <header>
+      <div className="container">
+        <div className="profile">
+          <div className="profile-image">
+            <img
+              alt=""
+              src="https://images.unsplash.com/photo-1513721032312-6a18a42c8763?w=152&h=152&fit=crop&crop=faces"
+            />
           </div>
-  
+
+          <div className="profile-user-settings">
+            <h1 className="profile-user-name">
+              Ariel &amp; Yaara <br /> Wedding
+            </h1>
+
+            <button
+              className="btn profile-edit-btn"
+              onClick={() => fileInput.current.click()}
+            >
+              Share your memories
+            </button>
+
+            <input
+              ref={fileInput}
+              type="file"
+              accept="image/*"
+              multiple
+              style={{ display: "none" }}
+              onChange={handleUpload}
+            />
+          </div>
+
+          <div className="profile-stats">
+            <ul>
+              <li>
+                <span className="profile-stat-count">{imageCount}</span> <br />
+                posts
+              </li>
+              <li>
+                <span className="profile-stat-count">{guestCount}</span> <br />
+                guests
+              </li>
+            </ul>
+          </div>
         </div>
-  
-        </header>  
-    );
+      </div>
+    </header>
+  );
 }
