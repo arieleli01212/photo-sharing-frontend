@@ -1,9 +1,40 @@
+import { useRef } from 'react';
 import './Profile'
 
 export function Profile({imageCount}) {
 
     const Title = <h1 className="profile-user-name">Ariel & Yaara <br /> Wedding</h1>
-    
+    const fileInputRef = useRef(null);  // Reference to the file input element
+
+      // Function to handle image upload
+      const handleImageUpload = async (event) => {
+        const files = event.target.files;
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+          formData.append('images', files[i]);
+        }
+
+        // Send the files to the backend
+        const response = await fetch('http://172.20.10.6:5000/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const result = await response.json();
+        setUploadedImages(result.filePaths);
+
+        // Update the image count and uploaded images state
+        setImageCount((prevCount) => prevCount + files.length);
+        
+        // Trigger a gallery sync by calling the fetchImages function
+        fetchImages(); // Call this to update the gallery with new images
+      };
+
+      // Trigger file input click when Share Your Memories button is clicked
+      const handleShareClick = () => {
+        fileInputRef.current.click();  // This will automatically open the file input dialog
+      };
+
     
     return(
         <header>
@@ -22,7 +53,7 @@ export function Profile({imageCount}) {
   
               {Title}
   
-              <button class="btn profile-edit-btn">Edit Profile</button>
+              <button class="btn profile-edit-btn" onClick={handleShareClick}>Edit Profile</button>
   
               <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
   
