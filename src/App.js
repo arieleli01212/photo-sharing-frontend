@@ -7,12 +7,17 @@ import { Gallery } from'./components/Gallery/Gallery';
 
 
 function App() {
+  const [imageCount, setImageCount] = useState(0);
 
   return (
     
     <div>
-      <Profile />
-      <Gallery />
+      <Profile 
+        imageCount={imageCount}
+      />
+      <Gallery 
+        setImageCount={setImageCount} 
+      />
     </div>
   );
 }
