@@ -10,7 +10,6 @@ function App() {
   const [imageCount, setImageCount] = useState(0);
 
   return (
-    
     <div>
       <Profile 
         imageCount={imageCount}
