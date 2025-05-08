@@ -103,7 +103,7 @@ Remove or comment-out the code block below to see how the browser will fall-back
 
     .gallery {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(22rem, 3fr));
+        grid-template-columns: repeat(3, 1fr); /* 3 items per row */
         grid-gap: 2rem;
     }
 
