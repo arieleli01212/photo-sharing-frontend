@@ -3,6 +3,8 @@ import './Profile'
 export function Profile({imageCount}) {
 
     const Title = <h1 className="profile-user-name">Ariel & Yaara <br /> Wedding</h1>
+    
+    
     return(
         <header>
 
@@ -29,9 +31,8 @@ export function Profile({imageCount}) {
             <div class="profile-stats">
   
               <ul>
-                <li><span class="profile-stat-count">{imageCount}</span> posts</li>
-                <li><span class="profile-stat-count">188</span> followers</li>
-                <li><span class="profile-stat-count">206</span> following</li>
+                <li><span class="profile-stat-count">{imageCount}</span><br/>posts</li>
+                <li><span class="profile-stat-count">188</span><br/>guests</li>
               </ul>
   
             </div>
