@@ -1,7 +1,7 @@
 import './App.css';
 import './components/Profile/Profile.css';
 import './components/Gallery/Gallery.css';
-import React from 'react';
+import React ,{ useState } from 'react';
 import { Profile } from './components/Profile/Profile';
 import { Gallery } from'./components/Gallery/Gallery';
 

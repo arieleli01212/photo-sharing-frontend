@@ -2,6 +2,7 @@ import './Profile'
 
 export function Profile({imageCount}) {
 
+    const Title = "Ariel & Ya'ara <br/> Wedding"
     return(
         <header>
 
@@ -17,7 +18,7 @@ export function Profile({imageCount}) {
   
             <div class="profile-user-settings">
   
-              <h1 class="profile-user-name">janedoe_</h1>
+              <h1 class="profile-user-name">{Title}</h1>
   
               <button class="btn profile-edit-btn">Edit Profile</button>
   
