@@ -1,4 +1,4 @@
-import Profile
+import './Profile'
 
 export function Profile() {
     return(
