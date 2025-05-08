@@ -1,13 +1,66 @@
 import './Gallery'
+import React, { useState } from 'react';
 
-export function Gallery() {
+export function Gallery({ setImageCount }) {
+    const [images, setImages] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+  // Fetch images from the server
+  const fetchImages = async () => {
+    setLoading(true);
+    try {
+      console.log('Fetching images from server...');
+      const response = await fetch('http://172.20.10.6:5000/get-images');
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch images');
+      }
+
+      const imageUrls = await response.json();
+      console.log('Fetched image URLs:', imageUrls);
+      
+      setImages(imageUrls); // Store image URLs in state
+      setImageCount(imageUrls.length); // Update image count
+      setLoading(false); // Stop loading
+    } catch (error) {
+      console.error('Error fetching images:', error);
+      setLoading(false); // Stop loading in case of error
+    }
+  };
+
+  // Fetch images on component mount
+  React.useEffect(() => {
+    fetchImages();
+  }, []); // Fetch images once when the component mounts
+
+    
     return(
         <main>
 
         <div class="container">
   
           <div class="gallery">
+            {loading ? (
+                <div>Loading images...</div>
+                ) : (
+                images.map((image, index) => (
+                    <div class="gallery-item" tabindex="0" >
   
+                    <img src={image} class="gallery-image" alt={`uploaded-${index}`}/>
+        
+                    <div class="gallery-item-info">
+        
+                      <ul>
+                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fas fa-heart" aria-hidden="true"></i> 56</li>
+                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i> 2</li>
+                      </ul>
+        
+                    </div>
+        
+                  </div>
+                ))
+            )}
+            
             <div class="gallery-item" tabindex="0">
   
               <img src="https://images.unsplash.com/photo-1511765224389-37f0e77cf0eb?w=500&h=500&fit=crop" class="gallery-image" alt=""/>
