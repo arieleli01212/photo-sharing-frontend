@@ -26,8 +26,16 @@ body {
     background-color: #fafafa;
     color: #262626;
     padding-bottom: 3rem;
+    background: linear-gradient(135deg,#ece9e6,#ffffff);
 }
-
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;                     /* full‑screen */
+    background: rgba(255,255,255,.55);   /* 0.35 = 35 % brighter */
+    pointer-events: none;         /* clicks pass through */
+    z-index: -1;                  /* stays behind your app content */
+}
 img {
     display: block;
 }
@@ -35,18 +43,9 @@ img {
 .container {
     max-width: 93.5rem;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 0.2rem;
 }
 
-.btn {
-    display: inline-block;
-    font: inherit;
-    background: none;
-    border: none;
-    color: inherit;
-    padding: 0;
-    cursor: pointer;
-}
 
 .btn:focus {
     outline: 0.5rem auto #4d90fe;

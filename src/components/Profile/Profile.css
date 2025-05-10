@@ -17,10 +17,11 @@
     justify-content: center;
     align-items: center;
     margin-right: 3rem;
+    padding-left: 4rem;
 }
 
 .profile-image img {
-    width: clamp(6rem, 18vw, 17rem); /* never smaller than 6 rem, never larger than 8 rem */
+    width: clamp(6rem, 18vw, 18rem); /* never smaller than 6 rem, never larger than 8 rem */
     aspect-ratio: 1 / 1;            /* keep it square */
     object-fit: cover;
     border-radius: 50%;
@@ -40,17 +41,25 @@
 .profile-user-name {
     display: inline-block;
     font-size: 3.2rem;
-    font-weight: 300;
+    font-weight: 700;
     text-align: center;
+    align-self: center;
 }
 
-.profile-edit-btn {
+.profile-share-btn {
     font-size: 1.4rem;
     line-height: 1.8;
     border: 0.1rem solid #dbdbdb;
-    border-radius: 0.3rem;
+    border-radius: 0.2rem;
     padding: 0 2.4rem;
     margin-left: 2rem;
+    display: inline-block;
+    background: none;
+    cursor: pointer;
+}
+.profile-share-btn:focus,
+.profile-share-btn:hover {
+    outline: 0.5rem auto #4d90fe;
 }
 
 .profile-settings-btn {
@@ -83,7 +92,7 @@
 
 .profile-real-name,
 .profile-stat-count,
-.profile-edit-btn {
+.profile-share-btn {
     font-weight: 600;
 }
 
@@ -110,29 +119,38 @@
     }
 
     .profile-image img {
-        width: 7.0rem;
-    }
+        width: clamp(6rem, 18vw, 18rem); /* never smaller than 6 rem, never larger than 8 rem */
+        aspect-ratio: 1 / 1;            /* keep it square */
+        object-fit: cover;
+        border-radius: 50%;
+      }
+    
 
     .profile-user-settings {
         flex-basis: calc(100% - 10.7rem);
         display: flex;
         flex-wrap: wrap;
         margin-top: 1rem;
+        flex-direction: column;
+        align-items: center;   /* horizontal centring */
+        text-align: center;    /* centre the text inside <h1> */
     }
 
     .profile-user-name {
-        font-size: 2.2rem;
+        display: inline-block;
+        font-size: 3em;
+        font-weight: 600;
+        text-align: center;
+        align-self: center;
     }
 
-    .profile-edit-btn {
+    .profile-share-btn {
         order: 1;
         padding: 0;
         text-align: center;
         margin-top: 1rem;
-    }
-
-    .profile-edit-btn {
         margin-left: 0;
+
     }
 
     .profile-bio {
@@ -140,7 +158,7 @@
         margin-top: 1.5rem;
     }
 
-    .profile-edit-btn,
+    .profile-share-btn,
     .profile-bio,
     .profile-stats {
         flex-basis: 100%;
@@ -223,14 +241,14 @@ Remove or comment-out the code block below to see how the browser will fall-back
             grid-gap: 1rem;
         }
 
-        .profile-edit-btn,
+        .profile-share-btn,
         .profile-stats,
         .profile-bio {
             grid-column: 1 / -1;
         }
 
         .profile-user-settings,
-        .profile-edit-btn,
+        .profile-share-btn,
         .profile-settings-btn,
         .profile-bio,
         .profile-stats {

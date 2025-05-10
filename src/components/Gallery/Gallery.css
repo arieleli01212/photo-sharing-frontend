@@ -4,7 +4,6 @@
     display: flex;
     flex-wrap: wrap;
     margin: -1rem -1rem;
-    padding-bottom: 3rem;
 }
 
 .gallery-item {
@@ -104,7 +103,7 @@ Remove or comment-out the code block below to see how the browser will fall-back
     .gallery {
         display: grid;
         grid-template-columns: repeat(3, 1fr); /* 3 items per row */
-        grid-gap: 2rem;
+        grid-gap: 0.5rem;
     }
 
     .profile-image,
