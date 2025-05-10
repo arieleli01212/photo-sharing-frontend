@@ -7,7 +7,7 @@ export function Profile({
   guestCount,
   setImageCount,
   fetchImages,
-  IP        // ← straight from App
+  API        // ← straight from App
 }) {
   const fileInput = useRef(null);
   const handleUpload = async (e) => {
@@ -17,7 +17,7 @@ export function Profile({
     const fd = new FormData();
     [...files].forEach((f) => fd.append("images", f));
 
-    await fetch(`http://${IP}:5000/upload`, { method: "POST", body: fd });
+    await fetch(`${API}/upload`, { method: "POST", body: fd });
 
     /* optimistic local counter */
     setImageCount((n) => n + files.length);
