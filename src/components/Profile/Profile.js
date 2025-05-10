@@ -1,14 +1,15 @@
 import React, { useRef } from "react";
 import "./Profile.css";
+import ProfileImage from "../../assets/images/proposal-image.png";
 
 export function Profile({
   imageCount,
   guestCount,
   setImageCount,
-  fetchImages,        // ← straight from App
+  fetchImages,
+  IP        // ← straight from App
 }) {
   const fileInput = useRef(null);
-
   const handleUpload = async (e) => {
     const files = e.target.files;
     if (!files.length) return;
@@ -16,7 +17,7 @@ export function Profile({
     const fd = new FormData();
     [...files].forEach((f) => fd.append("images", f));
 
-    await fetch("http://172.20.10.6:5000/upload", { method: "POST", body: fd });
+    await fetch(`http://${IP}:5000/upload`, { method: "POST", body: fd });
 
     /* optimistic local counter */
     setImageCount((n) => n + files.length);
@@ -32,7 +33,7 @@ export function Profile({
           <div className="profile-image">
             <img
               alt=""
-              src="https://images.unsplash.com/photo-1513721032312-6a18a42c8763?w=152&h=152&fit=crop&crop=faces"
+              src={ProfileImage}
             />
           </div>
 

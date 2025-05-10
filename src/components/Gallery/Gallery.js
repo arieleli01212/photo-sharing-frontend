@@ -1,7 +1,7 @@
 import "./Gallery.css";
 
 export function Gallery({ images }) {
-  if (!images.length) return <p className="loader">Loading…</p>;
+  if (!images.length) return <p className="loader"></p>;
 
   return (
     <main>

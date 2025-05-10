@@ -12,7 +12,7 @@
 
 .profile-image {
     float: left;
-    width: calc(33.333% - 1rem);
+    width: calc(33.333% - 4rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -20,8 +20,11 @@
 }
 
 .profile-image img {
+    width: clamp(6rem, 18vw, 17rem); /* never smaller than 6 rem, never larger than 8 rem */
+    aspect-ratio: 1 / 1;            /* keep it square */
+    object-fit: cover;
     border-radius: 50%;
-}
+  }
 
 .profile-user-settings,
 .profile-stats,
@@ -107,7 +110,7 @@
     }
 
     .profile-image img {
-        width: 7.7rem;
+        width: 7.0rem;
     }
 
     .profile-user-settings {
