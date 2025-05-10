@@ -14,7 +14,7 @@ export default function App() {
   const [lastViewedIndex, setLastIdx]   = useState(0);
 
 
-  const API = "http://172.20.10.6:8000";
+  const API = `https://${window.location.host}/api`;
 
   /** one function in charge of talking to the server */
   const fetchImages = useCallback(async () => {
@@ -34,18 +34,6 @@ export default function App() {
   /* grab the initial gallery once, when the app mounts */
   useEffect(() => { fetchImages(); }, [fetchImages]);
   
-  // useEffect(() => {
-  //   /* 1️⃣  initial value so there’s no flash of 0 */
-  //   fetch(`${API}/guest`)
-  //     .then((r) => r.json())
-  //     .then((d) => setGuestCount(d.count));
-
-  //   /* 2️⃣  live updates */
-  //   const socket = io(API);
-  //   socket.on("guestCount", setGuestCount);
-
-  //   return () => socket.close();             // tidy up on unmount
-  // }, []);
 
   useEffect(() => {
     // live guest counter
@@ -53,7 +41,7 @@ export default function App() {
     const ws = new WebSocket(`${proto}://${window.location.host}/ws`);
     ws.onmessage = (evt) => {
       try {
-        const data = JSON.parse(evt.data);     // { guestCount: 3 }
+        const data = JSON.parse(evt.data);     
         setGuestCount(data.guestCount);
       } catch (e) {
         console.error("WS parse error", e);
@@ -64,7 +52,7 @@ export default function App() {
     ws.onclose   = () => console.log("WS closed");
     ws.onerror   = (e) => console.error("WS error", e);
   
-    return () => ws.close();                   // tidy up on unmount
+    return () => ws.close();                   
   }, []);
 
   const closeViewer = (idx) => {
