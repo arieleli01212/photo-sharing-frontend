@@ -49,8 +49,8 @@ export default function App() {
 
   useEffect(() => {
     // live guest counter
-    const ws = new WebSocket("ws://172.20.10.6:8000/ws");
-  
+    const proto  = window.location.protocol === "https:" ? "wss" : "ws";
+    const ws = new WebSocket(`${proto}://${window.location.host}/ws`);
     ws.onmessage = (evt) => {
       try {
         const data = JSON.parse(evt.data);     // { guestCount: 3 }
