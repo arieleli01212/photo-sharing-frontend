@@ -9,16 +9,21 @@ export default function App() {
   const [imageCount, setImageCount]   = useState(0);
   const [guestCount, setGuestCount]   = useState(0);      // you’ll hook this up later
   const [images, setImages]           = useState([]);     // *** MUST be an array ***
-  const IP = '192.168.0.101';
+
+
+  const IP = '172.20.10.6';
   /** one function in charge of talking to the server */
   const fetchImages = useCallback(async () => {
     try {
       const res  = await fetch(`http://${IP}:5000/get-images`);
       const list = await res.json();                      // [ ".../uploads/abc.jpg", … ]
+      console.log("list:", list);
       setImages(list);
       setImageCount(list.length);
     } catch (err) {
       console.error("fetchImages failed:", err);
+      setImages([]);
+      setImageCount(0);
     }
   }, []);
 
