@@ -256,3 +256,21 @@ Remove or comment-out the code block below to see how the browser will fall-back
         }
     }
 }
+
+
+/* add to Profile.css or a new PostsHeader.css */
+
+.posts-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    padding: 0.8rem 0;
+    background: rgba(0 0 0 / .75);      /* opaque so text stays readable */
+    backdrop-filter: blur(6px);          /* nice iOS‑style glass */
+    color: #fff;
+    font-size: 1.4rem;
+    text-align: center;
+    letter-spacing: .02em;
+    font-weight: 600;
+}

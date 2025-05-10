@@ -36,6 +36,7 @@ body::before {
     pointer-events: none;         /* clicks pass through */
     z-index: -1;                  /* stays behind your app content */
 }
+
 img {
     display: block;
 }

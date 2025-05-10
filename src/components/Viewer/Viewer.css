@@ -1,0 +1,46 @@
+.viewer {
+    /* just a normal block that fills the main container */
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    /* keep scrolling inside the list instead of the page if you like */
+    overflow-y: visible;      /* or auto if you prefer an inner scroll */
+    padding: 2rem 0 2rem;
+}
+  /* hide the OS scrollbar but keep scrolling */
+.viewer::-webkit-scrollbar { 
+    display:none; 
+}
+.viewer { 
+    scrollbar-width:none;
+}
+  
+.viewer-close {
+    position: sticky;
+    top: 1rem; left: 1rem;
+    font-size: 2rem;
+    background: rgba(0 0 0 / .45);
+    color:#fff; border:0; border-radius:.3rem;
+    padding:.15rem .6rem;
+    cursor:pointer;
+    z-index: 10000;
+  }
+  
+/* list of pictures */
+.viewer-list { list-style:none; margin:0; padding:0;
+    display:flex; flex-direction:column; align-items:center; gap:2rem; 
+}
+
+.viewer-item {
+    width: clamp(280px, 80vmin, 500px); 
+}
+
+.viewer-item img {
+    width:100%;                /* every img same width */
+    aspect-ratio: 3 / 4;       /* ⬅ set 3:4 portrait frame; change to 1/1 for squares */
+    object-fit: cover;         /* fill the frame, crop overflow */
+    border-radius:.5rem;
+    box-shadow:0 4px 15px rgb(0 0 0 / .25);
+}
+  

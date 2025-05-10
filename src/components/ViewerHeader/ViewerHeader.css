@@ -1,0 +1,36 @@
+.viewer-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;      /* title centred */
+    background: rgba(0 0 0 / .75);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: .02em;
+  }
+  
+  .viewer-back {
+    position: absolute;           /* stays at left without moving title */
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: 0;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .viewer-title {
+    pointer-events: none;         /* click passes to button if overlapped */
+  }
+  
+.viewer-back,
+.viewer-title {
+    font-size: 2rem;
+}
+  
