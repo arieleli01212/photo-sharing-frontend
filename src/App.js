@@ -5,6 +5,7 @@ import { Gallery } from "./components/Gallery/Gallery";
 import "./components/Profile/Profile.css";
 import "./components/Gallery/Gallery.css";
 import "./App.css";
+import FaceBrowser from "./components/Faces/Face";
 
 export default function App() {
   const [imageCount, setImageCount]   = useState(0);
@@ -14,7 +15,7 @@ export default function App() {
   const [lastViewedIndex, setLastIdx]   = useState(0);
 
 
-  const API = `https://${window.location.host}/api`;
+  const API = `http://172.20.10.6:5000`;
 
   /** one function in charge of talking to the server */
   const fetchImages = useCallback(async () => {
@@ -38,7 +39,7 @@ export default function App() {
   useEffect(() => {
     // live guest counter
     const proto  = window.location.protocol === "https:" ? "wss" : "ws";
-    const ws = new WebSocket(`${proto}://${window.location.host}/ws`);
+    const ws = new WebSocket(`${proto}://172.20.10.6:5000/ws`);
     ws.onmessage = (evt) => {
       try {
         const data = JSON.parse(evt.data);     
@@ -81,6 +82,9 @@ export default function App() {
         setViewerOpen={setViewerOpen}
         lastViewedIndex={lastViewedIndex}
         onClose={closeViewer}
+      />
+      <FaceBrowser 
+        API={API}
       />
       </>
   );
