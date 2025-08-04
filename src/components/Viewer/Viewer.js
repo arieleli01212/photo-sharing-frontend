@@ -3,48 +3,53 @@ import { useEffect, useRef, useState  } from "react";
 import { ViewerHeader } from "../ViewerHeader/ViewerHeader";
 import "./Viewer.css";
 
-export function Viewer({ images, startIndex, onBack  }) {
+export function Viewer({ images, startIndex, onBack, headerRef }) {
   const containerRef = useRef(null);
   const itemRefs     = useRef([]);       // keep refs to every li
   const [current, setCurrent] = useState(startIndex);
 
+  // Ref to always access the latest current value inside the handler
+  const currentRef = useRef(current);
+  useEffect(() => {
+    currentRef.current = current;
+  }, [current]);
+
   /* scroll first image into view on mount */
   useEffect(() => {
-    itemRefs.current[startIndex]?.scrollIntoView({ block: "center" });
-  }, [startIndex]);
+    if (
+      Array.isArray(images) &&
+      typeof startIndex === "number" &&
+      startIndex >= 0 &&
+      startIndex < images.length
+    ) {
+      itemRefs.current[startIndex]?.scrollIntoView({ block: "center" });
+    }
+  }, [images, startIndex]);
 
-    /* detect which item is visually closest to the viewport centre */
+  // bind / unbind once, and ensure latest current is used
+  useEffect(() => {
     const handleScroll = () => {
-        const header = document.querySelector(".posts-header");
-        const headerH = header ? header.getBoundingClientRect().height : 0;
-    
-        const centreLine = headerH + (window.innerHeight - headerH) / 2;
-    
-        let bestIdx = current;
-        let bestDist = Infinity;
-    
-        itemRefs.current.forEach((li, i) => {
+      const headerH = headerRef && headerRef.current ? headerRef.current.getBoundingClientRect().height : 0;
+      const centreLine = headerH + (window.innerHeight - headerH) / 2;
+      let bestIdx = currentRef.current;
+      let bestDist = Infinity;
+      itemRefs.current.forEach((li, i) => {
         if (!li) return;
         const r = li.getBoundingClientRect();
         const liCentre = r.top + r.height / 2;
         const dist = Math.abs(liCentre - centreLine);
         if (dist < bestDist) {
-            bestDist = dist;
-            bestIdx = i;
+          bestDist = dist;
+          bestIdx = i;
         }
-        });
-    
-        if (bestIdx !== current) {
+      });
+      if (bestIdx !== currentRef.current) {
         setCurrent(bestIdx);
-        }
+      }
     };
-  
-
-    // bind / unbind once
-    useEffect(() => {
-       window.addEventListener("scroll", handleScroll, { passive: true });
-       return () => window.removeEventListener("scroll", handleScroll);
-    });
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [headerRef]);
 
   return (
     <>
@@ -53,16 +58,16 @@ export function Viewer({ images, startIndex, onBack  }) {
       <section
         className="viewer"
         ref={containerRef}
-        onScroll={handleScroll}
       >
         <ul className="viewer-list">
           {images.map((src, i) => (
             <li
-              key={i}
+              key={`${src}-${i}`}
               ref={(el) => (itemRefs.current[i] = el)}
               className="viewer-item"
+              tabIndex={0}
             >
-              <img src={src} alt={`full-${i}`} />
+              <img src={src} alt={`Photo ${i + 1} of ${images.length}`} loading="lazy" />
             </li>
           ))}
         </ul>

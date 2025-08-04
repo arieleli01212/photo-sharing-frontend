@@ -26,6 +26,8 @@ export function Profile({
 
     /* now ask App to refresh the official list */
     fetchImages();
+    // Reload the page after upload
+    window.location.reload();
   };
 
   const imgRef = useRef(null);
