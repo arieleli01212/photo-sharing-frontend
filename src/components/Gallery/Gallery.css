@@ -1,63 +1,46 @@
-/* Gallery Section */
+/* Gallery Section - Instagram Style */
 
 .gallery {
-    display: flex;
-    flex-wrap: wrap;
-    margin: -1rem -1rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    margin: 0;
+    padding: 0;
 }
 
 .gallery-item {
     position: relative;
-    flex: 1 0 22rem;
-    margin: 1rem;
-    color: #fff;
     cursor: pointer;
+    background-color: #fafafa;
+    overflow: hidden;
 }
 
-.gallery-item:hover .gallery-item-info,
-.gallery-item:focus .gallery-item-info {
+.gallery-item:hover .gallery-item-info {
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.3);
+    color: white;
 }
 
 .gallery-item-info {
     display: none;
-}
-
-.gallery-item-info li {
-    display: inline-block;
-    font-size: 1.7rem;
+    font-size: 16px;
     font-weight: 600;
-}
-
-.gallery-item-likes {
-    margin-right: 2.2rem;
-}
-
-.gallery-item-type {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    font-size: 2.5rem;
-    text-shadow: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.1);
-}
-
-.fa-clone,
-.fa-comment {
-    transform: rotateY(180deg);
+    text-align: center;
 }
 
 .gallery-image {
     width: 100%;
     height: 100%;
-    aspect-ratio: 3 / 4;   /* same as viewer */
+    aspect-ratio: 1 / 1;  /* Square like Instagram */
     object-fit: cover;
+    display: block;
 }
 
 /* Loader */
@@ -88,63 +71,15 @@ Remove or comment-out the code block below to see how the browser will fall-back
 
 */
 
-@supports (display: grid) {
-    .profile {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        grid-template-rows: repeat(3, auto);
-        grid-column-gap: 3rem;
-        align-items: center;
-    }
-
-    .profile-image {
-        grid-row: 1 / -1;
-    }
-
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
     .gallery {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr); /* 3 items per row */
-        grid-gap: 0.5rem;
+        gap: 2px;
     }
+}
 
-    .profile-image,
-    .profile-user-settings,
-    .profile-stats,
-    .profile-bio,
-    .gallery-item,
+@media (max-width: 480px) {
     .gallery {
-        width: auto;
-        margin: 0;
-    }
-
-    @media (max-width: 40rem) {
-        .profile {
-            grid-template-columns: auto 1fr;
-            grid-row-gap: 1.5rem;
-        }
-
-        .profile-image {
-            grid-row: 1 / 2;
-        }
-
-        .profile-user-settings {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            grid-gap: 1rem;
-        }
-
-        .profile-edit-btn,
-        .profile-stats,
-        .profile-bio {
-            grid-column: 1 / -1;
-        }
-
-        .profile-user-settings,
-        .profile-edit-btn,
-        .profile-settings-btn,
-        .profile-bio,
-        .profile-stats {
-            margin: 0;
-        }
+        gap: 1px;
     }
 }
