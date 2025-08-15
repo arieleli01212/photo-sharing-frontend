@@ -33,8 +33,8 @@ RUN apk add --no-cache curl
 # Copy built application
 COPY --from=builder /app/build /usr/share/nginx/html
 
-# Copy nginx configuration if exists
-COPY nginx.conf /etc/nginx/conf.d/default.conf 2>/dev/null || echo "No custom nginx config found"
+# Copy custom nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
