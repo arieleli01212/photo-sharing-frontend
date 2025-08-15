@@ -1,55 +1,40 @@
-/*
+/* Instagram-style Global Styles */
 
-All grid code is placed in a 'supports' rule (feature query) at the bottom of the CSS (Line 310). 
-        
-The 'supports' rule will only run if your browser supports CSS grid.
-
-Flexbox and floats are used as a fallback so that browsers which don't support grid will still recieve a similar layout.
-
-*/
-
-/* Base Styles */
-
-:root {
-    font-size: 10px;
-}
-
-*,
-*::before,
-*::after {
+* {
     box-sizing: border-box;
 }
 
-body {
-    font-family: "Open Sans", Arial, sans-serif;
-    min-height: 100vh;
-    background-color: #fafafa;
-    color: #262626;
-    padding-bottom: 3rem;
-    background: linear-gradient(135deg,#ece9e6,#ffffff);
+html {
+    font-size: 14px;
 }
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;                     /* full‑screen */
-    background: rgba(255,255,255,.55);   /* 0.35 = 35 % brighter */
-    pointer-events: none;         /* clicks pass through */
-    z-index: -1;                  /* stays behind your app content */
-}
+
 
 img {
     display: block;
+    max-width: 100%;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+button:focus {
+    outline: 2px solid #0095f6;
+    outline-offset: 2px;
+}
+
+main {
+    min-height: 100vh;
+    padding-top: 30px;
 }
 
 .container {
-    max-width: 93.5rem;
+    max-width: 935px;
     margin: 0 auto;
-    padding: 0 0.2rem;
-}
-
-
-.btn:focus {
-    outline: 0.5rem auto #4d90fe;
+    padding: 0 20px;
 }
 
 .visually-hidden {
@@ -58,4 +43,24 @@ img {
     width: 1px;
     overflow: hidden;
     clip: rect(1px, 1px, 1px, 1px);
+}
+
+/* Remove default list styling */
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+
+
+/* Mobile responsive */
+@media (max-width: 735px) {
+    .container {
+        padding: 0 16px;
+    }
+
+    main {
+        padding-top: 16px;
+    }
 }

@@ -2,8 +2,11 @@ import React, { useState, useCallback, useEffect } from "react";
 // import { io } from "socket.io-client";
 import { Profile } from "./components/Profile/Profile";
 import { Gallery } from "./components/Gallery/Gallery";
+import { Login } from "./components/Login/Login";
+import { getApiUrl, getWebSocketUrl } from "./config/api";
 import "./components/Profile/Profile.css";
 import "./components/Gallery/Gallery.css";
+import "./components/Login/Login.css";
 import "./App.css";
 
 export default function App() {
@@ -13,9 +16,35 @@ export default function App() {
   const [viewerOpen,  setViewerOpen]  = useState(false);
   const [lastViewedIndex, setLastIdx] = useState(0);
   const [uploadError, setUploadError] = useState(null);
+  
+  // Authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
 
-  //const API = `https://${window.location.host}/api`;
-  const API = `http://127.0.0.1:8000`;
+  const API = getApiUrl();
+
+  // Authentication functions
+  const handleLogin = (userData) => {
+    setIsAuthenticated(true);
+    setUser(userData);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('username');
+    setIsAuthenticated(false);
+    setUser(null);
+  };
+
+  // Check for existing authentication on app load
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    const username = localStorage.getItem('username');
+    if (token && username) {
+      setIsAuthenticated(true);
+      setUser({ username, access_token: token });
+    }
+  }, []);
 
   /** one function in charge of talking to the server */
   const fetchImages = useCallback(async (signal) => {
@@ -43,8 +72,7 @@ export default function App() {
 
   useEffect(() => {
     // live guest counter
-    const proto  = window.location.protocol === "https:" ? "wss" : "ws";
-    const ws = new WebSocket(`${proto}://127.0.0.1:8000/ws`);
+    const ws = new WebSocket(getWebSocketUrl('/ws'));
     ws.onmessage = (evt) => {
       try {
         const data = JSON.parse(evt.data);     
@@ -66,6 +94,16 @@ export default function App() {
     setViewerOpen(false);
   }, []);
 
+  // Show authentication forms if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <Login
+        onLogin={handleLogin}
+        API={API}
+      />
+    );
+  }
+
   return (
     <>
       {/* 1️⃣ conditional header */}
@@ -78,6 +116,8 @@ export default function App() {
           API={API}      // ◀—— call me after upload
           uploadError={uploadError}
           setUploadError={setUploadError}
+          user={user}
+          onLogout={handleLogout}
         />
       )}
 
