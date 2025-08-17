@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useEffect } from "react";
 // import { io } from "socket.io-client";
 import { Profile } from "./components/Profile/Profile";
-import { Gallery } from "./components/Gallery/Gallery";
+import GalleryContainer from "./components/Gallery/GalleryContainer";
 import { Login } from "./components/Login/Login";
 import { getApiUrl, getWebSocketUrl } from "./config/api";
 import "./components/Profile/Profile.css";
-import "./components/Gallery/Gallery.css";
+import "./components/Gallery/gallery.css";
 import "./components/Login/Login.css";
 import "./App.css";
 
@@ -20,6 +20,7 @@ export default function App() {
   // Authentication state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const [isGuest, setIsGuest] = useState(false);
 
   const API = getApiUrl();
 
@@ -27,6 +28,13 @@ export default function App() {
   const handleLogin = (userData) => {
     setIsAuthenticated(true);
     setUser(userData);
+    setIsGuest(false);
+  };
+
+  const handleGuestLogin = () => {
+    setIsGuest(true);
+    setIsAuthenticated(false);
+    setUser({ username: 'Guest', isGuest: true });
   };
 
   const handleLogout = () => {
@@ -34,6 +42,7 @@ export default function App() {
     localStorage.removeItem('username');
     setIsAuthenticated(false);
     setUser(null);
+    setIsGuest(false);
   };
 
   // Check for existing authentication on app load
@@ -49,6 +58,7 @@ export default function App() {
   /** one function in charge of talking to the server */
   const fetchImages = useCallback(async (signal) => {
     try {
+      console.log("API:", API);
       const res  = await fetch(`${API}/get-images`, { signal });
       const list = await res.json();                      // [ ".../uploads/abc.jpg", … ]
       console.log("list:", list);
@@ -94,11 +104,12 @@ export default function App() {
     setViewerOpen(false);
   }, []);
 
-  // Show authentication forms if not authenticated
-  if (!isAuthenticated) {
+  // Show authentication forms if not authenticated and not guest
+  if (!isAuthenticated && !isGuest) {
     return (
       <Login
         onLogin={handleLogin}
+        onGuestLogin={handleGuestLogin}
         API={API}
       />
     );
@@ -118,11 +129,12 @@ export default function App() {
           setUploadError={setUploadError}
           user={user}
           onLogout={handleLogout}
+          isGuest={isGuest}
         />
       )}
 
       {/* 2️⃣ gallery gets control to open / close viewer */}
-      <Gallery
+      <GalleryContainer
         images={images}
         viewerOpen={viewerOpen}
         setViewerOpen={setViewerOpen}

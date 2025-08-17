@@ -3,7 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <style>
+      *,*::before,*::after { box-sizing: border-box; }
+      img,svg,video,canvas { max-width: 100%; height: auto; }
+      body { margin: 0; }
+    </style>
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"

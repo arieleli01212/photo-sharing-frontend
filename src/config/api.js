@@ -1,10 +1,10 @@
 // API Configuration - Used only by App.js to configure the entire application
 const API_CONFIG = {
   // Base URL for the API
-  BASE_URL: process.env.REACT_APP_API_URL || 'http://localhost:8000',
+  BASE_URL: 'http://localhost:8000',
   
   // WebSocket URL
-  WS_URL: process.env.REACT_APP_WS_URL || 'localhost:8000',
+  WS_URL: 'localhost:8000',
   
   // Available endpoints (for documentation)
   ENDPOINTS: {
