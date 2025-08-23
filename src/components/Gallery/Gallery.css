@@ -1,85 +1,335 @@
-/* Gallery Section - Instagram Style */
+/* —— Gallery with floating glass Select speed-dial (animated out/in) —— */
 
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4px;
-    margin: 0;
-    padding: 0;
+:root {
+    --gap: clamp(10px, 2.6vw, 18px);
+
+    --card-bg: #111;
+    --ring: 1px solid rgba(255, 255, 255, .10);
+
+    --accent: #0a84ff;
+    /* iOS blue */
+    --accent-2: #ffd166;
+
+    /* Stronger, viewer-like glass so text stays readable on white images */
+    --glass-btn: rgba(10, 10, 10, .66);
+    --glass-btn-hover: rgba(10, 10, 10, .76);
+    --glass-border: rgba(255, 255, 255, .50);
+    --glass-action: rgba(10, 10, 10, .58);
+    --glass-chip: rgba(255, 255, 255, .16);
 }
 
+/* Grid (unchanged) */
+.gallery {
+    display: grid;
+    gap: var(--gap);
+    grid-template-columns: repeat(auto-fill, minmax(min(45%, 180px), 1fr));
+    align-items: stretch;
+    margin: 6px 0 calc(72px + env(safe-area-inset-bottom, 0px));
+    /* leave space for FAB */
+}
+
+@media (min-width: 768px) {
+    .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+}
+
+.gallery.is-selecting .gallery-item {
+    cursor: pointer;
+}
+
+/* Tiles */
 .gallery-item {
     position: relative;
     cursor: pointer;
-    background-color: #fafafa;
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
     overflow: hidden;
+    background: var(--card-bg);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
+    transform: translateY(8px);
+    opacity: 0;
+    transition: transform .35s ease, opacity .35s ease, box-shadow .2s ease, outline-color .2s ease;
 }
 
-.gallery-item:hover .gallery-item-info {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.gallery-item.is-visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.gallery-item:focus {
+    outline: none;
+}
+
+.gallery-item:focus-visible {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, .6), 0 8px 22px rgba(0, 0, 0, .35);
+}
+
+.gallery-item.is-picked {
+    outline: 3px solid rgba(10, 132, 255, .7);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, .35);
+}
+
+.gallery-item.is-picked .gallery-image {
+    transform: scale(.985);
+    filter: saturate(.95) brightness(.92);
+}
+
+.pick-mask {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
-    color: white;
+    inset: 0;
+    background: radial-gradient(120% 120% at 50% 70%, rgba(0, 0, 0, .28), rgba(0, 0, 0, 0) 60%);
+    opacity: 0;
+    transition: opacity .2s ease;
+    pointer-events: none;
 }
 
-.gallery-item-info {
-    display: none;
-    font-size: 16px;
-    font-weight: 600;
-    text-align: center;
+.pick-mask.is-on {
+    opacity: 1;
+}
+
+.select-check {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: 14px;
+    color: #fff;
+    background: rgba(0, 0, 0, .40);
+    border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    transform: scale(.95);
+    opacity: .95;
+    transition: transform .15s ease, opacity .15s ease, background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.select-check.is-on {
+    background: var(--accent);
+    border-color: rgba(0, 0, 0, .25);
+    transform: scale(1);
+    opacity: 1;
 }
 
 .gallery-image {
     width: 100%;
     height: 100%;
-    aspect-ratio: 1 / 1;  /* Square like Instagram */
     object-fit: cover;
-    display: block;
+    transition: transform .28s ease, opacity .25s ease, filter .2s ease;
 }
 
-/* Loader */
-
-.loader {
-    width: 5rem;
-    height: 5rem;
-    border: 0.6rem solid #999;
-    border-bottom-color: transparent;
-    border-radius: 50%;
-    margin: 0 auto;
-    animation: loader 500ms linear infinite;
+.gallery-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: #fff;
+    opacity: 0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .55);
+    background: linear-gradient(to top, rgba(0, 0, 0, .45), rgba(0, 0, 0, .1));
+    transition: opacity .25s ease, backdrop-filter .25s ease;
+    backdrop-filter: blur(0px);
+    pointer-events: none;
 }
 
-/* Spinner Animation */
+.overlay-icon {
+    font-size: 20px;
+}
 
-@keyframes loader {
+.overlay-text {
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    font-size: 12px;
+    position: relative;
+}
+
+.overlay-text::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    right: 50%;
+    bottom: -2px;
+    height: 3px;
+    background: var(--accent-2);
+    border-radius: 3px;
+    opacity: 0;
+    transition: all .25s ease;
+}
+
+@media (hover:hover) {
+    .gallery-item:hover .gallery-image {
+        transform: scale(1.02);
+        opacity: .96;
+    }
+
+    .gallery-item:hover .gallery-overlay {
+        opacity: 1;
+        backdrop-filter: blur(2px);
+    }
+
+    .gallery-item:hover .overlay-text::after {
+        left: 0;
+        right: 0;
+        opacity: 1;
+    }
+}
+
+/* Loading skeletons (unchanged) */
+.gallery-skeletons {
+    display: grid;
+    gap: var(--gap);
+    grid-template-columns: repeat(auto-fill, minmax(min(45%, 180px), 1fr));
+    margin: 10px 0 var(--gap);
+}
+
+@media (min-width: 768px) {
+    .gallery-skeletons {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+}
+
+.skeleton-tile {
+    aspect-ratio: 1/1;
+    border-radius: 12px;
+    overflow: hidden;
+    background: linear-gradient(90deg, #222 0%, #2a2a2a 20%, #222 40%);
+    background-size: 200% 100%;
+    animation: shimmer 1.1s linear infinite;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .22);
+}
+
+@keyframes shimmer {
     to {
-        transform: rotate(360deg);
+        background-position: -200% 0;
     }
 }
 
-/*
-
-The following code will only run if your browser supports CSS grid.
-
-Remove or comment-out the code block below to see how the browser will fall-back to flexbox & floated styling. 
-
-*/
-
-/* Mobile responsive adjustments */
-@media (max-width: 768px) {
-    .gallery {
-        gap: 2px;
-    }
+.gallery-empty {
+    text-align: center;
+    color: #c8c8c8;
+    font-weight: 600;
+    letter-spacing: .02em;
+    margin: 6px 0 0;
 }
 
+/* —— Floating speed-dial —— */
+
+.fab-dock {
+    position: fixed;
+    right: max(12px, var(--gap));
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    z-index: 1200;
+    display: flex;
+    flex-direction: row-reverse;
+    /* actions slide to the LEFT of the main button */
+    align-items: center;
+    gap: 10px;
+}
+
+/* Main button: toggles Select ⇄ Cancel */
+.fab-main {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 46px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-btn);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    color: #fff;
+    font-weight: 800;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .55);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, .35);
+    transition: filter .2s ease, transform .08s ease, background .2s ease;
+}
+
+.fab-main:hover {
+    filter: brightness(1.06);
+    background: var(--glass-btn-hover);
+}
+
+.fab-main:active {
+    transform: translateY(1px);
+}
+
+/* Actions animate OUT from main button */
+.fab-action,
+.fab-chip {
+    opacity: 0;
+    transform-origin: right center;
+    transform: translateX(6px) scale(.92);
+    pointer-events: none;
+    transition:
+        opacity .26s ease,
+        transform .34s cubic-bezier(.22, 1.2, .36, 1),
+        /* a little spring */
+        background .2s ease, color .2s ease, border-color .2s ease;
+    transition-delay: calc(0.02s * var(--i, 1));
+}
+
+.fab-open .fab-action,
+.fab-open .fab-chip {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    pointer-events: auto;
+}
+
+/* Action styles */
+.fab-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 42px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-action);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    font-weight: 800;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .55);
+}
+
+.fab-action:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.fab-share:hover {
+    filter: brightness(1.08);
+}
+
+/* Count chip */
+.fab-chip {
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-chip);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    font-weight: 800;
+    font-size: 12px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .55);
+}
+
+/* Tighten gaps on tiny phones */
 @media (max-width: 480px) {
-    .gallery {
-        gap: 1px;
+
+    .gallery,
+    .gallery-skeletons {
+        gap: 6px;
     }
 }

@@ -1,46 +1,237 @@
+/* —— Viewer with scrim-based contrast (no CORS) —— */
+
+:root {
+    --gap: clamp(10px, 2.6vw, 18px);
+    --radius: 14px;
+
+    --ink: #f5f6f7;
+    --muted: #c8c8c8;
+
+    --card-bg: #000;
+    --ring: 1px solid rgba(255, 255, 255, .10);
+
+    /* glass buttons */
+    --glass-btn: rgba(255, 255, 255, .16);
+    --glass-btn-hover: rgba(255, 255, 255, .22);
+    --glass-border: rgba(255, 255, 255, .35);
+}
+
 .viewer {
-    /* just a normal block that fills the main container */
-    position: relative;
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    /* keep scrolling inside the list instead of the page if you like */
-    overflow-y: visible;      /* or auto if you prefer an inner scroll */
-    padding: 2rem 0 2rem;
-}
-  /* hide the OS scrollbar but keep scrolling */
-.viewer::-webkit-scrollbar { 
-    display:none; 
-}
-.viewer { 
-    scrollbar-width:none;
-}
-  
-.viewer-close {
-    position: sticky;
-    top: 1rem; left: 1rem;
-    font-size: 2rem;
-    background: rgba(0 0 0 / .45);
-    color:#fff; border:0; border-radius:.3rem;
-    padding:.15rem .6rem;
-    cursor:pointer;
-    z-index: 10000;
-  }
-  
-/* list of pictures */
-.viewer-list { list-style:none; margin:0; padding:0;
-    display:flex; flex-direction:column; align-items:center; gap:2rem; 
+    padding: 8px 0 56px;
 }
 
+.viewer-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, 2.6vw, 16px);
+    align-items: center;
+}
+
+/* Each post card */
 .viewer-item {
-    width: clamp(280px, 80vmin, 500px); 
+    width: min(94svw, 520px);
+    margin: 0 auto;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--card-bg);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .30);
+    position: relative;
+
+    transform: translateY(10px);
+    opacity: 0;
+    transition: transform .35s ease, opacity .35s ease, box-shadow .2s ease;
 }
 
-.viewer-item img {
-    width:100%;                /* every img same width */
-    aspect-ratio: 3 / 4;       /* ⬅ set 3:4 portrait frame; change to 1/1 for squares */
-    object-fit: cover;         /* fill the frame, crop overflow */
-    border-radius:.5rem;
-    box-shadow:0 4px 15px rgb(0 0 0 / .25);
+.viewer-item.is-visible {
+    transform: translateY(0);
+    opacity: 1;
 }
-  
+
+.viewer-item:focus {
+    outline: none;
+}
+
+.viewer-item:focus-visible {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, .6), 0 10px 30px rgba(0, 0, 0, .38);
+}
+
+/* Image + loading */
+.viewer-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    background: #111;
+    opacity: 0;
+    transform: scale(1.01);
+    transition: opacity .35s ease, transform .35s ease;
+}
+
+.viewer-img.is-loaded {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.skeleton {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background: linear-gradient(90deg, #181818 0%, #202020 25%, #181818 50%);
+    background-size: 200% 100%;
+    animation: shimmer 1.1s linear infinite;
+}
+
+@keyframes shimmer {
+    to {
+        background-position: -200% 0;
+    }
+}
+
+/* Friendly broken state */
+.viewer-item.is-broken {
+    display: grid;
+    place-items: center;
+    background: #121212;
+    border: var(--ring);
+}
+
+.broken {
+    text-align: center;
+    color: var(--muted);
+    padding: 20px 10px;
+}
+
+.broken-emoji {
+    font-size: 26px;
+    margin-bottom: 6px;
+}
+
+.broken-text {
+    font-weight: 700;
+}
+
+.broken-retry {
+    margin-top: 8px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, .2);
+    background: rgba(255, 255, 255, .06);
+    color: #fff;
+    cursor: pointer;
+}
+
+.broken-retry:active {
+    transform: translateY(1px);
+}
+
+/* Bottom scrim for contrast (no CORS) */
+.viewer-scrim {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: clamp(90px, 22vw, 160px);
+    background: linear-gradient(to top, rgba(0, 0, 0, .58), rgba(0, 0, 0, .28) 55%, rgba(0, 0, 0, 0) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Frosted-glass controls */
+.viewer-tools {
+    position: absolute;
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    pointer-events: none;
+    z-index: 2;
+    /* above the scrim */
+}
+
+.viewer-btn {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-btn);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: .08em;
+    transition: filter .2s ease, transform .08s ease, background .2s ease;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .45);
+}
+
+.viewer-btn:hover {
+    filter: brightness(1.05);
+    background: var(--glass-btn-hover);
+}
+
+.viewer-btn:active {
+    transform: translateY(1px);
+}
+
+.btn-icn {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.btn-txt {
+    line-height: 1;
+}
+
+/* Back-to-top FAB */
+.scroll-top {
+    position: fixed;
+    right: max(12px, var(--gap));
+    bottom: 14px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, .35);
+    background: rgba(0, 0, 0, .45);
+    color: #fff;
+    font-weight: 900;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .35);
+    backdrop-filter: blur(8px);
+    transition: filter .2s ease, transform .08s ease;
+}
+
+.scroll-top:hover {
+    filter: brightness(1.05);
+}
+
+.scroll-top:active {
+    transform: translateY(1px);
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .viewer-item,
+    .viewer-img,
+    .skeleton {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+    }
+}
+
+/* Tiny devices */
+@media (max-width: 420px) {
+    .viewer-item {
+        border-radius: 12px;
+    }
+}

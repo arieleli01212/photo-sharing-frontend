@@ -1,48 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import './Login.css';
 
-export function Login({ onLogin, API }) {
+export function Login({ onLogin, onGuestLogin, API }) {
   const [error, setError] = useState('');
   const [googleLoading, setGoogleLoading] = useState(false);
 
   useEffect(() => {
-    // Initialize Google Sign-In
     if (window.google) {
       window.google.accounts.id.initialize({
-        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID || "your-google-client-id.apps.googleusercontent.com",
+        client_id:
+          process.env.REACT_APP_GOOGLE_CLIENT_ID ||
+          'your-google-client-id.apps.googleusercontent.com',
         callback: handleGoogleResponse,
       });
-      
+
       window.google.accounts.id.renderButton(
-        document.getElementById("google-signin-button"),
+        document.getElementById('google-signin-button'),
         {
-          theme: "outline",
-          size: "large",
-          width: "100%",
-          text: "signin_with",
+          theme: 'outline',
+          size: 'large',
+          width: '100%',
+          text: 'signin_with',
+          shape: 'pill',
+          logo_alignment: 'left',
         }
       );
     }
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleGoogleResponse = async (response) => {
     setGoogleLoading(true);
     setError('');
-    
+
     try {
       const result = await fetch(`${API}/google-login`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token: response.credential }),
       });
 
       const data = await result.json();
 
       if (result.ok) {
-        // Store token in localStorage
         localStorage.setItem('authToken', data.access_token);
         localStorage.setItem('username', data.username);
         onLogin(data);
@@ -56,24 +56,62 @@ export function Login({ onLogin, API }) {
     }
   };
 
-
   return (
     <div className="login-container">
-      <div className="login-box">
+      {/* floating warm orbs (decor only) */}
+      <span aria-hidden className="orb orb-1" />
+      <span aria-hidden className="orb orb-2" />
+      <span aria-hidden className="orb orb-3" />
+
+      <div className="login-box" role="dialog" aria-labelledby="login-title">
         <div className="login-header">
-          <h1>Ariel & Ya'ara</h1>
-          <p>Wedding Photo Sharing</p>
+          <div className="brand-mark" aria-hidden>💍</div>
+          <h1 id="login-title">Ariel &amp; Ya&apos;ara</h1>
+          <p>Wedding Photo Sharing · Capture the night ✨</p>
         </div>
 
-        {error && <div className="error-message">{error}</div>}
-
-        <div id="google-signin-button" style={{ width: '100%', marginBottom: '15px' }}></div>
-        {googleLoading && (
-          <div style={{ textAlign: 'center', margin: '10px 0', color: '#8e8e8e' }}>
-            Signing in with Google...
+        {error && (
+          <div className="error-message" role="alert" aria-live="polite">
+            {error}
           </div>
         )}
 
+        <div className="google-wrap" id="google-signin-button" />
+
+        {googleLoading && (
+          <div className="google-loading">Signing in with Google…</div>
+        )}
+
+        <div className="login-divider">
+          <span>or</span>
+        </div>
+
+        <button
+          type="button"
+          className="guest-btn"
+          onClick={onGuestLogin}
+          disabled={googleLoading}
+          aria-label="Continue as Guest"
+          title="Continue as Guest"
+        >
+          <span aria-hidden>🎉</span> Continue as Guest
+        </button>
+
+        <p className="guest-note">
+          Guests can view photos and celebrate with us.
+        </p>
+
+        <div className="login-footer" aria-live="polite">
+          Secure sign-in via Google. By continuing you agree to our{' '}
+          <a className="link-btn" href="#" onClick={(e) => e.preventDefault()}>
+            Terms
+          </a>{' '}
+          &amp;{' '}
+          <a className="link-btn" href="#" onClick={(e) => e.preventDefault()}>
+            Privacy
+          </a>
+          .
+        </div>
       </div>
     </div>
   );
