@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 // import { io } from "socket.io-client";
 import { Profile } from "./components/Profile/Profile";
 import GalleryContainer from "./components/Gallery/GalleryContainer";
-import { Login } from "./components/Login/Login";
+import LoginContainer from "./components/Login/LoginContainer";
 import { getApiUrl, getWebSocketUrl } from "./config/api";
 import "./components/Profile/Profile.css";
 import "./components/Gallery/gallery.css";
@@ -107,7 +107,7 @@ export default function App() {
   // Show authentication forms if not authenticated and not guest
   if (!isAuthenticated && !isGuest) {
     return (
-      <Login
+      <LoginContainer
         onLogin={handleLogin}
         onGuestLogin={handleGuestLogin}
         API={API}
